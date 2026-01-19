@@ -6,12 +6,17 @@
 <title>XV Años Dulce María</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
 --vino:#7b1e3a;
 --dorado:#d4af37;
 --blanco:#ffffff;
+}
+
+body.no-scroll{
+  overflow: hidden;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -63,7 +68,7 @@ border:none;
 border-radius:50px;
 background:linear-gradient(145deg,var(--vino),#5c142a);
 color:white;
-font-size:17px;
+font-size:19px;
 cursor:pointer;
 }
 
@@ -263,6 +268,31 @@ z-index:999;
 animation:spin 4s linear infinite;
 }
 
+/* texto dulce */
+.mensaje{
+max-width:700px;
+margin:30px auto 0;
+font-size:19px;
+line-height:1.8;
+color:#444;
+text-align:center;
+}
+
+/* mensaje cierre final */
+.mensaje.cierre{
+font-size:18px;
+margin-top:40px;
+color:var(--vino);
+}
+
+/* logo de sobre mesa regalos */
+.icono-sobre{
+font-size:42px;
+color:var(--dorado);
+text-align:center;
+margin-bottom:12px;
+}
+
 @keyframes spin{
 from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
@@ -306,6 +336,17 @@ iframe{height:260px}
     <h1>Dulce María</h1>
   </div>
 </header>
+
+
+<section>
+<h2 class="titulo">Dulce</h2>
+<div class="decor"></div>
+<p class="mensaje">
+Con la bendición de Dios y el amor de toda mi familia, me siento muy feliz de llegar a este momento de mi vida.
+<br><br>
+Ahora empieza un camino que conduce a un mundo de sueños e ilusiones, que con mucha fe, humildad y esperanza deseo cumplir.
+</p>
+</section>
 
 <section>
 <h2 class="titulo">Fecha</h2>
@@ -362,7 +403,7 @@ Tomatlán, Jalisco, México<br><br>
 <b>Recepción: 5:30 pm</b>
 </p>
 
-<a class="map-btn" href=""https://maps.app.goo.gl/y6pfRwGJoYEhnMjA7?g_st=aw"" target="_blank">
+<a class="map-btn" href="https://maps.app.goo.gl/7QPzaNSHjFkLe3so9?g_st=aw" target="_blank">
 📍 Abrir en Google Maps
 </a>
 </section>
@@ -370,6 +411,9 @@ Tomatlán, Jalisco, México<br><br>
 <section>
 <h2 class="titulo">Mesa de Regalos</h2>
 <div class="decor"></div>
+<div class="icono-sobre">
+<i class="fas fa-envelope"></i>
+</div>
 <p>
 Tu presencia es nuestro mejor regalo.<br>
 Si deseas obsequiarnos algo más,<br>
@@ -377,9 +421,19 @@ habrá sobres disponibles en cada mesa.
 </p>
 </section>
 
-<div id="lightbox" onclick="this.style.display='none'">
-<img>
+
+<div class="decor"></div>
+
+<p class="mensaje cierre">
+Los mejores momentos de la vida merecen ser compartidos.<br>
+<b>Gracias por acompañarnos.</b>
+</p>
+<section></section>
+
+<div id="lightbox">
+  <img>
 </div>
+
 
 <button id="musicBtn" onclick="toggleMusic()">⏸</button>
 
@@ -428,12 +482,23 @@ sec.classList.add("visible");
 });
 
 // GALERIA
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = lightbox.querySelector("img");
+
 document.querySelectorAll(".galeria img").forEach(img=>{
-img.onclick=()=>{
-document.querySelector("#lightbox img").src=img.src;
-document.getElementById("lightbox").style.display="flex";
-}
+  img.onclick = () => {
+    lightboxImg.src = img.src;
+    lightbox.style.display = "flex";
+    document.body.classList.add("no-scroll"); // 🔒 bloquea scroll
+  }
 });
+
+// Cerrar lightbox al dar click
+lightbox.onclick = () => {
+  lightbox.style.display = "none";
+  document.body.classList.remove("no-scroll"); // 🔓 vuelve scroll
+};
+
 </script>
 
 </body>
