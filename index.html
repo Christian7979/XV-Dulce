@@ -175,24 +175,81 @@ color:var(--vino);
 font-family:'Playfair Display',serif;
 }
 
-/* GALERIA */
-.galeria{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-padding:0 25px;
+/* ===== CARRUSEL PROFESIONAL ===== */
+.carousel{
+  position:relative;
+  max-width:480px;
+  margin:40px auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.galeria img{
-width:100%;
-border-radius:20px;
-cursor:pointer;
-transition:.4s;
+.carousel-viewport{
+  width:100%;
+  overflow:hidden;
+  border-radius:25px;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+  background:#fff;
 }
 
-.galeria img:hover{
-transform:scale(1.05);
+.carousel-track{
+  display:flex;
+  transition:transform .6s ease-in-out;
 }
+
+.carousel-track img{
+  width:100%;
+  height:auto;              /* 🔑 NO recorta */
+  object-fit:contain;       /* 🔑 formato real */
+  flex-shrink:0;
+  cursor:pointer;
+}
+
+/* Flechas */
+.arrow{
+  background:rgba(0,0,0,.5);
+  color:white;
+  border:none;
+  font-size:28px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  cursor:pointer;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:10;
+}
+
+.arrow.left{left:-15px;}
+.arrow.right{right:-15px;}
+
+.arrow:hover{
+  background:var(--vino);
+}
+
+/* Puntitos */
+.carousel-dots{
+  display:flex;
+  justify-content:center;
+  margin-top:18px;
+}
+
+.carousel-dots span{
+  width:10px;
+  height:10px;
+  background:#ccc;
+  border-radius:50%;
+  margin:0 6px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.carousel-dots span.active{
+  background:var(--vino);
+}
+
 
 /* LIGHTBOX */
 #lightbox{
@@ -377,19 +434,30 @@ Ahora empieza un camino que conduce a un mundo de sueños e ilusiones, que con m
 </section>
 
 <section>
-<h2 class="titulo">Galería</h2>
-<div class="decor"></div>
-<div class="galeria">
-<img src='imagenes/fondo.jpeg'>
-<img src='imagenes/fondo2.jpeg'>
-<img src='imagenes/fondo3.jpeg'>
-	
-<img src='imagenes/fondo4.jpeg'>
-<img src='imagenes/fondo5.jpeg'>
-<img src='imagenes/fondo6.jpeg'>
-<img src='imagenes/fondo7.jpeg'>
-</div>
+  <h2 class="titulo">Galería</h2>
+  <div class="decor"></div>
+
+  <div class="carousel">
+    <button class="arrow left">&#10094;</button>
+
+    <div class="carousel-viewport">
+      <div class="carousel-track">
+        <img src="imagenes/fondo.jpeg" alt="">
+        <img src="imagenes/fondo2.jpeg" alt="">
+        <img src="imagenes/fondo3.jpeg" alt="">
+        <img src="imagenes/fondo4.jpeg" alt="">
+        <img src="imagenes/fondo5.jpeg" alt="">
+        <img src="imagenes/fondo6.jpeg" alt="">
+        <img src="imagenes/fondo7.jpeg" alt="">
+      </div>
+    </div>
+
+    <button class="arrow right">&#10095;</button>
+  </div>
+
+  <div class="carousel-dots"></div>
 </section>
+
 
 <section class="ubicacion">
 <h2 class="titulo">Ubicación</h2>
@@ -481,23 +549,72 @@ sec.classList.add("visible");
 });
 });
 
-// GALERIA
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = lightbox.querySelector("img");
 
-document.querySelectorAll(".galeria img").forEach(img=>{
-  img.onclick = () => {
-    lightboxImg.src = img.src;
-    lightbox.style.display = "flex";
-    document.body.classList.add("no-scroll"); // 🔒 bloquea scroll
+document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== CARRUSEL =====
+  const track = document.querySelector(".carousel-track");
+  const images = document.querySelectorAll(".carousel-track img");
+  const dotsContainer = document.querySelector(".carousel-dots");
+  const prevBtn = document.querySelector(".arrow.left");
+  const nextBtn = document.querySelector(".arrow.right");
+
+  if(!track || images.length === 0) return;
+
+  let index = 0;
+  const autoTime = 4500;
+
+  // Crear dots
+  images.forEach((img, i) => {
+    const dot = document.createElement("span");
+    if(i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+
+    dot.addEventListener("click", () => {
+      index = i;
+      updateCarousel();
+    });
+
+    // Abrir lightbox
+    img.addEventListener("click", () => {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = lightbox.querySelector("img");
+
+      lightboxImg.src = img.src;
+      lightbox.style.display = "flex";
+      document.body.classList.add("no-scroll");
+    });
+  });
+
+  const dots = document.querySelectorAll(".carousel-dots span");
+
+  function updateCarousel(){
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(d => d.classList.remove("active"));
+    dots[index].classList.add("active");
   }
+
+  // Flechas
+  nextBtn.onclick = () => {
+    index = (index + 1) % images.length;
+    updateCarousel();
+  };
+
+  prevBtn.onclick = () => {
+    index = (index - 1 + images.length) % images.length;
+    updateCarousel();
+  };
+
+  // Autoplay
+  setInterval(() => {
+    index = (index + 1) % images.length;
+    updateCarousel();
+  }, autoTime);
+
 });
 
-// Cerrar lightbox al dar click
-lightbox.onclick = () => {
-  lightbox.style.display = "none";
-  document.body.classList.remove("no-scroll"); // 🔓 vuelve scroll
-};
+
+
 
 </script>
 
