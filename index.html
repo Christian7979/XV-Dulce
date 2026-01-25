@@ -251,11 +251,10 @@ font-family:'Playfair Display',serif;
 }
 
 
-/* LIGHTBOX */
 #lightbox{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.85);
+background:rgba(0,0,0,.9);
 display:none;
 align-items:center;
 justify-content:center;
@@ -266,7 +265,33 @@ z-index:9999;
 max-width:90%;
 max-height:90%;
 border-radius:25px;
+box-shadow:0 20px 60px rgba(0,0,0,.6);
 }
+
+/* TACHITA */
+.close-lightbox{
+position:absolute;
+top:20px;
+right:20px;
+width:42px;
+height:42px;
+border-radius:50%;
+border:none;
+background:rgba(255,255,255,.15);
+color:#fff;
+font-size:26px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:.3s;
+}
+
+.close-lightbox:hover{
+background:rgba(255,255,255,.35);
+transform:scale(1.1);
+}
+
 
 /* UBICACION */
 .ubicacion{
@@ -499,8 +524,10 @@ Los mejores momentos de la vida merecen ser compartidos.<br>
 <section></section>
 
 <div id="lightbox">
+  <button class="close-lightbox" aria-label="Cerrar">✕</button>
   <img>
 </div>
+
 
 
 <button id="musicBtn" onclick="toggleMusic()">⏸</button>
@@ -613,6 +640,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+const lightbox = document.getElementById("lightbox");
+const closeBtn = document.querySelector(".close-lightbox");
+
+// Cerrar con la tachita
+closeBtn.addEventListener("click", () => {
+  lightbox.style.display = "none";
+  document.body.classList.remove("no-scroll");
+});
+
+// Cerrar tocando fondo
+lightbox.addEventListener("click", (e) => {
+  if(e.target === lightbox){
+    lightbox.style.display = "none";
+    document.body.classList.remove("no-scroll");
+  }
+});
+
+// Cerrar con ESC
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape"){
+    lightbox.style.display = "none";
+    document.body.classList.remove("no-scroll");
+  }
+});
 
 
 
